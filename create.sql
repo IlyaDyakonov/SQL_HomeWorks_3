@@ -22,10 +22,10 @@ CREATE TABLE IF NOT EXISTS music_album (
 );
 
 CREATE TABLE IF NOT EXISTS artists_albums (
- 	artist_id INT NOT NULL,
- 	album_id INT NOT NULL,
- 	FOREIGN KEY (artist_id) REFERENCES artists(artist_id),
- 	FOREIGN KEY (album_id) REFERENCES music_album(album_id)
+	artist_id INT NOT NULL,
+	album_id INT NOT NULL,
+	FOREIGN KEY (artist_id) REFERENCES artists(artist_id),
+	FOREIGN KEY (album_id) REFERENCES music_album(album_id)
 );
 
 CREATE TABLE IF NOT EXISTS song (

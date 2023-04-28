@@ -26,14 +26,15 @@ INSERT INTO genres_performer (genre_id, artist_id) VALUES
 (5, 8);
 
 INSERT INTO music_album(album_id, name_album, date_album) VALUES
-(1, 'Камнем по голове', 2002),
+(1, 'Камнем по голове', 2019),
 (2, 'Mutter', 2001),
 (3, 'Let Go', 2002),
 (4, '1989', 2018),
 (5, 'The Marshall Mathers LP', 2000),
 (6, 'Ella and Louis', 1956),
 (7, 'Ellington at Newport', 1956),
-(8, 'Coat of Many Colors', 1971);
+(8, 'Coat of Many Colors', 1971),
+(9, 'Сollaborative', 2020);
 
 INSERT INTO artists_albums (artist_id, album_id) VALUES
 (1, 1),
@@ -43,7 +44,9 @@ INSERT INTO artists_albums (artist_id, album_id) VALUES
 (5, 5),
 (6, 6),
 (7, 7),
-(8, 8);
+(8, 8),
+(1, 9),
+(5, 9)
 
 INSERT INTO song (song_id, song_name, song_time, album_id) VALUES
 (1, 'Восставший из ада', '236', 1),
@@ -69,7 +72,9 @@ INSERT INTO song (song_id, song_name, song_time, album_id) VALUES
 (21, 'I Got It Bad', '190', 7),
 (22, 'Coat of Many Colors', '184', 8),
 (23, 'Traveling Man', '165', 8),
-(24, 'The Mystery of the Mystery', '144', 8);
+(24, 'The Mystery of the Mystery', '144', 8),
+(25, 'Клоун на троне', '199', 9),
+(26, 'Кровавая игра', '259', 9);
 
 INSERT INTO collection (collection_id, name_collection, date_collection) VALUES
 (1, 'Old hits', 1950),

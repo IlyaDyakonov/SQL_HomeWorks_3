@@ -1,6 +1,6 @@
 -- 1. Название и год выхода альбомов, вышедших в 2018 году.
-SELECT name_album, date_album
-FROM music_album
+SELECT name_album, date_album  -- столбцы
+FROM music_album               -- в какой таблице
 WHERE date_album = 2018;
 
 -- 2. Название и продолжительность самого длительного трека.

@@ -1,15 +1,20 @@
 -- 1. Количество исполнителей в каждом жанре.
 SELECT name_genres, COUNT(artist_id)   -- столбцы
 FROM genres g                          -- в какой таблице
-JOIN genres_performer a ON g.genre_id = a.genre_id
+LEFT JOIN genres_performer a ON g.genre_id = a.genre_id
 GROUP BY g.name_genres;
 
 -- 2. Количество треков, вошедших в альбомы 2019–2020 годов.
-SELECT name_album, COUNT(song_id)
-FROM music_album m
-JOIN song s ON s.album_id = m.album_id
-WHERE date_album >= 2019 AND date_album <= 2020
-GROUP BY m.name_album;
+-- SELECT name_album, COUNT(song_id)
+-- FROM music_album m
+-- JOIN song s ON s.album_id = m.album_id
+-- WHERE date_album >= 2019 AND date_album <= 2020
+-- GROUP BY m.name_album;
+
+SELECT COUNT(song_id)
+FROM song s
+JOIN music_album ma ON s.album_id = ma.album_id
+WHERE date_album BETWEEN 2019 AND 2020;
 
 -- 3. Средняя продолжительность треков по каждому альбому.
 SELECT name_album, AVG(song_time) as avg_track
@@ -18,10 +23,20 @@ JOIN music_album ON song.album_id = music_album.album_id
 GROUP BY music_album.name_album;
 
 -- 4. Все исполнители, которые не выпустили альбомы в 2020 году.
-SELECT DISTINCT performer_name 
+-- SELECT performer_name 
+-- FROM artists a
+-- JOIN artists_albums aa ON a.artist_id = aa.artist_id
+-- JOIN music_album ON aa.album_id = music_album.album_id 
+-- WHERE date_album != 2020;
+
+SELECT performer_name
 FROM artists a
-JOIN music_album ON a.artist_id = music_album.album_id 
-WHERE date_album != 2020 OR date_album IS NULL;
+WHERE performer_name NOT IN (
+    SELECT performer_name
+    FROM artists a
+    JOIN artists_albums aa ON a.artist_id = aa.artist_id
+    JOIN music_album ma ON aa.album_id = ma.album_id
+    WHERE date_album = 2020);
 
 -- 5. Названия сборников, в которых присутствует конкретный исполнитель (выберите его сами).
 SELECT DISTINCT c.name_collection
@@ -34,12 +49,19 @@ JOIN artists ON aa.artist_id = artists.artist_id
 WHERE artists.performer_name = 'Король и Шут';
 
 -- 6. Названия альбомов, в которых присутствуют исполнители более чем одного жанра.
-SELECT ma.name_album
+-- SELECT ma.name_album
+-- FROM music_album ma
+-- JOIN artists_albums aa ON ma.album_id = aa.album_id
+-- JOIN genres_performer gp ON aa.artist_id = gp.artist_id
+-- GROUP BY ma.name_album
+-- HAVING COUNT(DISTINCT gp.genre_id) > 1;
+
+SELECT DISTINCT name_album
 FROM music_album ma
 JOIN artists_albums aa ON ma.album_id = aa.album_id
 JOIN genres_performer gp ON aa.artist_id = gp.artist_id
-GROUP BY ma.name_album
-HAVING COUNT(DISTINCT gp.genre_id) > 1;
+GROUP BY ma.album_id, aa.album_id
+HAVING COUNT(gp.genre_id) > 1;
 
 -- 7. Наименования треков, которые не входят в сборники.
 SELECT s.song_name
@@ -55,10 +77,22 @@ JOIN song s ON ma.album_id = s.album_id
 WHERE song_time = (SELECT MIN(song_time) FROM song);
 
 -- 9. Названия альбомов, содержащих наименьшее количество треков.
+-- SELECT name_album
+-- FROM music_album
+-- WHERE album_id IN (
+--	SELECT album_id
+--	FROM song
+--	GROUP BY album_id
+--	HAVING COUNT(song_id) = (SELECT MIN(cnt) FROM (SELECT COUNT(song_id) AS cnt FROM song GROUP BY album_id) AS counts));
+
 SELECT name_album
-FROM music_album
-WHERE album_id IN (
-	SELECT album_id
-	FROM song
-	GROUP BY album_id
-	HAVING COUNT(song_id) = (SELECT MIN(cnt) FROM (SELECT COUNT(song_id) AS cnt FROM song GROUP BY album_id) AS counts));
+FROM music_album ma
+JOIN song s ON ma.album_id = s.album_id
+GROUP BY ma.album_id
+HAVING COUNT(song_id) = (
+    SELECT COUNT(song_id)
+    FROM song s
+    GROUP BY s.album_id
+    ORDER BY 1
+    LIMIT 1
+);

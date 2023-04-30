@@ -47,3 +47,4 @@ CREATE TABLE IF NOT EXISTS song_collection (
 	collection_id INT NOT NULL,
 	FOREIGN KEY (song_id) REFERENCES song(song_id),
 	FOREIGN KEY (collection_id) REFERENCES collection(collection_id)
+);
